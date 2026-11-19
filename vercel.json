@@ -1,15 +1,5 @@
 {
-  "version": 2,
-  "name": "talabat",
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/api"
-    }
-  ],
-  "functions": {
-    "api/index.js": {
-      "includeFiles": "dist/talabat/**"
-    }
-  }
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/talabat/browser",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
