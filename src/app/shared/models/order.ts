@@ -1,7 +1,7 @@
 import { IAddress } from './address';
 
 export interface IOrderToCreate {
-  cartId: string;
+  basketId: string;
   deliveryMethodId: number;
   shipToAddress: IAddress;
 }
