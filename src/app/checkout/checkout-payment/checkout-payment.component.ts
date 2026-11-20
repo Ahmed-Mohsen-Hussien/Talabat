@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -12,7 +20,7 @@ declare var Stripe;
 @Component({
   selector: 'app-checkout-payment',
   templateUrl: './checkout-payment.component.html',
-  styleUrls: ['./checkout-payment.component.scss']
+  styleUrls: ['./checkout-payment.component.scss'],
 })
 export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
   @Input() checkoutForm: FormGroup;
@@ -30,11 +38,17 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
   cardExpiryValid = false;
   cardCvcValid = false;
 
-  constructor(private basketService: BasketService, private checkoutService: CheckoutService,
-    private toastr: ToastrService, private router: Router) { }
+  constructor(
+    private basketService: BasketService,
+    private checkoutService: CheckoutService,
+    private toastr: ToastrService,
+    private router: Router,
+  ) {}
 
   ngAfterViewInit(): void {
-    this.stripe = Stripe('pk_test_51RK2wLCoYa42citMxFkeLpEztleuUA3GlDtHU62U8xgX9DkDeOgXlJdkavNLnJ8dxYO6mLz0yedHDD5FsskE3AZp00MGnEDeMb');
+    this.stripe = Stripe(
+      'pk_test_51RK2wLCoYa42citMxFkeLpEztleuUA3GlDtHU62U8xgX9DkDeOgXlJdkavNLnJ8dxYO6mLz0yedHDD5FsskE3AZp00MGnEDeMb',
+    );
     const elements = this.stripe.elements();
 
     this.cardNumber = elements.create('cardNumber');
@@ -62,7 +76,7 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
     } else {
       this.cardErrors = null;
     }
-    switch(event.elementType) {
+    switch (event.elementType) {
       case 'cardNumber':
         this.cardNumberValid = event.complete;
         break;
@@ -98,17 +112,18 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
   }
 
   private async confirmPaymentWithStripe(basket) {
-    debugger
-    console.log(this.cardNumber)
-    console.log(this.checkoutForm.get('paymentForm').get('nameOnCard').value)
+    debugger;
+    console.log(this.cardNumber);
+    console.log(this.checkoutForm.get('paymentForm').get('nameOnCard').value);
 
-    return this.stripe.confirmCardPayment(basket.clientSecret, { // then stripe will call webhook endpoint
+    return this.stripe.confirmCardPayment(basket.clientSecret, {
+      // then stripe will call webhook endpoint
       payment_method: {
         card: this.cardNumber,
         billing_details: {
-          name: this.checkoutForm.get('paymentForm').get('nameOnCard').value
-        }
-      }
+          name: this.checkoutForm.get('paymentForm').get('nameOnCard').value,
+        },
+      },
     });
   }
 
@@ -117,13 +132,13 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
     return this.checkoutService.createOrder(orderToCreate).toPromise();
   }
 
-
   private getOrderToCreate(basket: IBasket) {
     return {
-      basketId: basket.id,
-      deliveryMethodId: +this.checkoutForm.get('deliveryForm').get('deliveryMethod').value,
-      shipToAddress: this.checkoutForm.get('addressForm').value
+      cartId: basket.id,
+      deliveryMethodId: +this.checkoutForm
+        .get('deliveryForm')
+        .get('deliveryMethod').value,
+      shipToAddress: this.checkoutForm.get('addressForm').value,
     };
   }
-
 }
